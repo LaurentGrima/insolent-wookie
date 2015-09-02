@@ -25,7 +25,8 @@ with open('data.json') as json_data:
         rentals.append({
             'id': output_rental.id,
             'price': output_rental.get_price(),
-            'commission': output_rental.get_commission()
+            'commission': output_rental.get_commission(),
+            'options': output_rental.options()
             })
 
     # Output the json file.

@@ -37,7 +37,7 @@ class Rental(object):
         self.distance = distance
         self.deductible_reduction = deductible_reduction
 
-    def get_rental_duration(self):
+    def get_duration(self):
         """ Calculates the rental duration in days.
 
         Example: a rental starting and finishing the same date
@@ -62,19 +62,19 @@ class Rental(object):
         Returns:
             The price as an Int.
         """
-        duration = self.get_rental_duration()
+        duration = self.get_duration()
         diff1 = max(duration - self.DECREASE[0]['threshold'], 0)
         diff2 = max(duration - diff1 - self.DECREASE[1]['threshold'], 0)
         diff3 = max(duration - diff1 - diff2 - self.DECREASE[2]['threshold'], 0)
-        total_price_per_day = int((
+        total_price_per_day = (
             self.DECREASE[0]['rate'] * diff1 +
             self.DECREASE[1]['rate'] * diff2 +
             self.DECREASE[2]['rate'] * diff3 +
             1) * self.car.price_per_day
-        )
+
         total_price_per_km = self.distance * self.car.price_per_km
 
-        return total_price_per_day + total_price_per_km
+        return round(total_price_per_day + total_price_per_km)
 
     def get_commission(self):
         """ Calculates the commission.
@@ -84,9 +84,9 @@ class Rental(object):
         """
         price = self.get_price()
         commission_total = price * self.COMMISSION_RATE
-        insurance_fee = int(commission_total * 0.5)
-        assistance_fee = int(self.get_rental_duration() * 100)
-        drivy_fee = int(max(
+        insurance_fee = round(commission_total / 2)
+        assistance_fee = round(self.get_duration() * 100)
+        drivy_fee = round(max(
             commission_total - (insurance_fee + assistance_fee),
             0))
         return {
@@ -94,3 +94,18 @@ class Rental(object):
             'assistance_fee': assistance_fee,
             'drivy_fee': drivy_fee
         }
+
+    def get_deductible_reduction(self):
+        """ Calculates the deductible reduction cost if applicable.
+
+        Returns:
+            The cost as an Int (0 if the deductible_reduction reduction
+                was not chosen).
+        """
+        if self.deductible_reduction:
+            return self.get_duration() * self.DEDUCTIBLE_DAILY_FEE
+        else:
+            return 0
+
+    def options(self):
+        return {'deductible_reduction': self.get_deductible_reduction()}
