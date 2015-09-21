@@ -56,6 +56,7 @@ class Rental
   # Calculates the commission.
   # Returns:
   #  A hash containing the differents fees.
+  public
   def get_commission
     price = get_price
     commission_total = price * COMMISSION_RATE
