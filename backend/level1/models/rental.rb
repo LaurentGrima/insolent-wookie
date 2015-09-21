@@ -17,7 +17,7 @@ class Rental
   # Example: a rental starting and finishing the same date
   #   has a duration of 1 day.
   # Returns:
-  #   The duration as an Int.
+  #   The duration as an integer.
   public
   def get_rental_duration
     d1 = DateTime.strptime(start_date, "%Y-%m-%d")
