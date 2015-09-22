@@ -57,11 +57,7 @@ class Rental
   #       was not chosen).
   public
   def get_deductible_reduction
-    if deductible_reduction
-      return get_duration * DEDUCTIBLE_DAILY_FEE
-    else
-      return 0
-    end
+    deductible_reduction ? get_duration * DEDUCTIBLE_DAILY_FEE : 0
   end
 
   # Get the options chosen for this rental.
